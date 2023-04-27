@@ -80,7 +80,7 @@ public class CalculatorController {
                     break;
                 case "/":
                     if (sk1 != 0) {
-                        result = sk1 / sk2;
+                        result = (double) sk1/ sk2;
 
                     } else {
                         return "error";
