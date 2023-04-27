@@ -134,7 +134,48 @@ public class CalculatorController {
         //grąžiname JSP failą, kuris turi būti talpinamas "webapp -> WEB-INF ->  JSP" folderi
         return "calculator";
     }
-}
+    @RequestMapping(method=RequestMethod.GET, value="/numbers")
+    public String getAllNumbers(Model model){
+
+        model.addAttribute("numbers",numberService.getAll());
+        return "numbers";
+    }
+
+    // id ateina iš frontendo, vartotojui pasirinkus konkretų įrašą
+    @RequestMapping(method=RequestMethod.GET, value="/show{id}")
+    public String getById(@RequestParam("id") int id,Model model){
+        model.addAttribute("number",numberService.getById(id));
+        return "number";
+    }
+
+    @RequestMapping(method=RequestMethod.GET, value="/delete{id}")
+    public String deleteById(@RequestParam("id") int id,Model model) {
+        numberService.delete(id);
+        model.addAttribute("numbers", numberService.getAll());
+        return "numbers";
+    }
+        /*
+        Atnaujinant įrašą pirmiasia reikia jį parodyti
+         */
+        @RequestMapping(method=RequestMethod.GET, value="/update{id}")
+        public String updateById(@RequestParam("id") int id,Model model){
+            model.addAttribute("number",numberService.getById(id));
+            return "update";
+        }
+
+        //Kadangi forma naudoja POST, čia taip pat naudojame POST
+        @RequestMapping(method=RequestMethod.POST, value="/updateNumber{id}")
+        public String updateNumber(@ModelAttribute("number")Number number){
+            numberService.update(number);
+            // redirect nukreipia vartotoją į įrašo atvaizdavimo puslapį(getById)
+            return "redirect:/show?id="+number.getId();
+        }
+
+    }
+
+
+
+
 /*
     @RequestMapping("/dalinti")
     public String dalint() {

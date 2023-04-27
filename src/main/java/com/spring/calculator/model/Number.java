@@ -84,6 +84,11 @@ public class Number {
         this.result = result;
     }
 
+    //Būtinas, kad Model vaikščiuotu tarp frontend ir backend
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Number{" +
