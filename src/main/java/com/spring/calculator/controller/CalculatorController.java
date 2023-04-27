@@ -1,58 +1,71 @@
-package com.spring.calculator;
+package com.spring.calculator.controller;
 
+import com.spring.calculator.model.Number;
+import com.spring.calculator.service.NumberService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 //Web controller, leidžia naudoti @RequestMapping
-//@RestContoller anotacija nurodo, kad pvz. String tipo rezultatas turėtų būti atvaizduojamas, toks, koks yra
-//@RestContoller anotacija naudojama tada kai frontedne nenaudojam springo (javascirpt, react, angular)
-//dažniausiai gražinami formatai, JSON, .xml
-//t.y. negražinami vaizdo (html, jsp)
+/* @RestContoller anotacija nurodo, kad pvz. String tipo rezultatas turėtų būti atvaizduojamas, toks, koks yra
+@RestContoller anotacija naudojama tada kai frontedne nenaudojam springo (javascirpt, react, angular)
+dažniausiai gražinami formatai, JSON, .xml  t.y. negražinami vaizdo (html, jsp) */
 //@RestController
 
 //kadangi mus reikia gražinti (view) pagal spring MVC, naudosime anotacija @Controller
 @Controller
-//Žymi konfigūracijos komponentą, viduje leidžia kurti BEAN per metodus su @Bean anotacija
-//Ši klasės lygio anotacija nurodo Spring   framwork atspėti konfigūraciją
-//Remiantis priklausomybėmis (JAR bibliotekomis), kurias programuotojas įtraukė į projektą (pom.xml)
-//Šiuo atveju ji veikia kartu su main method
+/*Žymi konfigūracijos komponentą, viduje leidžia kurti BEAN per metodus su @Bean anotacija
+Ši klasės lygio anotacija nurodo Spring   framwork atspėti konfigūraciją
+Remiantis priklausomybėmis (JAR bibliotekomis), kurias programuotojas įtraukė į projektą (pom.xml)
+Šiuo atveju ji veikia kartu su main method */
 @EnableAutoConfiguration
 public class CalculatorController {
+
+    /* Kaip perduodami duomenys skirt komponentams:
+    vartotojas -> CalculatorController -> NumberServiceImpl -> NumberDAUImpl
+     */
+
+    // @Autowired naud automat priklausomybių injekcijai (IOC -iversion of control)
+    // kad panaudoti @Autowired anotaciją reikia pirmaiausia turėti apsirašius @Been @Configuration klasė
+    @Autowired
+
+    /* @Qualifier anotacija kartu su @ autowired patikslina su kuriuo konkrečiai Been susieti priklausomybę.
+ Jeigu @Configuration klasėje yra daugiau nei 1 Been, @Quolifier anotacija yra privaloma, kitų atvėju metama klaida:
+  'Consider marking one of the beans as @Primary, updating the consumer to accept multiple beans,
+  or using @Qualifier to identify the bean that should be consumed' */
+    @Qualifier("NumberService")
+
+    public NumberService numberService;
+
     //kadangi skaiciuotuvo forma naudoja POST f-ja, cia irgi nurodysime POST
     @PostMapping("/calculate")
-    // @RequestParam anotacija perduoda per URL perduodus duomenis (String, String) kurie patalpinami HasMap (K,V)
+    // @RequestParam anotacija perduoda per URL perduodus duomenis (String, String) kurie patalpinami HashMap (K,V)
 
     public String calculate(
-            // Svarbu: parametras BindingResult turi eiti iškarto po anotacijos @Valid
-            //Kitu atvėju gausite klaidą "Validation failed for object"
+            /* Svarbu: parametras BindingResult turi eiti iškarto po anotacijos @Valid
+            Kitu atvėju gausite klaidą "Validation failed for object" */
             @Valid @ModelAttribute("number") Number numb, BindingResult bindingResult,
             @RequestParam HashMap<String, String> inputForm, ModelMap outputForm) {
 
+        /*Per URL perduodamas key, turi pavadinima sk1
+        pagal key sk1 ištraukiama reikšmė, pvz. vartotojas įvėdė 8
+        mums reikia konvertuoti iš String į int, kad paskaičiuoti rezultatą
+        Pirmas String yra key (sk1,sk2, action) o antras  - value
+        Key tiek fronted tiek backed turi sutapti
+        URL pvz  http://localhost:8080/calc?sk1=20&sk2=20&action=*
+        simboliai koduojasi https://meyerweb.com/eric/tools/dencoder/
+        jeigu validacijos klaidos(žr. Number class aprašyta validaciją prie kiekvieno skaičiaus) */
 
-        //Per URL perduodamas key, turi pavadinima sk1
-        //pagal key sk1 ištraukiama reikšmė, pvz. vartotojas įvėdė 8
-        //mums reikia konvertuoti iš String į int, kad paskaičiuoti rezultatą
-        //Pirmas String yra key (sk1,sk2, action) o antras  - value
-        //Key tiek fronted tiek backed turi sutapti
-        //URL pvz  http://localhost:8080/calc?sk1=20&sk2=20&action=*
-        //simboliai koduojasi https://meyerweb.com/eric/tools/dencoder/
-
-        // jeigu validacijos klaidos(žr. Number class aprašyta validaciją prie kiekvieno skaičiaus
         if (bindingResult.hasErrors()) {
             //vartotojas lieka skaičiuotuvo lange tol, kol neištaiso validacijos klaidų
             return "calculator";
@@ -60,10 +73,10 @@ public class CalculatorController {
             int sk1 = Integer.parseInt(inputForm.get("sk1"));
             int sk2 = Integer.parseInt(inputForm.get("sk2"));
             String action = inputForm.get("action");
-            double result = 0;
+            double result=0 ;
             switch (action) {
                 case "*":
-                    result = sk1 * sk2;
+                    result =(double) sk1 * sk2;
                     break;
                 case "/":
                     if (sk1 != 0) {
@@ -87,6 +100,10 @@ public class CalculatorController {
                 outputForm.put("sk2", sk2);
                 outputForm.put("action", action);
                 outputForm.put("result", result);
+
+                // Kreipėmes į Service kuris savo ruoštu kreipiasi į DAO ir išsaugoja įrašą DB
+                numberService.insert(new Number(sk1,sk2,action,result));
+
                 return "calculate";
             }
         }

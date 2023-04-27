@@ -4,11 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
-//SpringBootApplication anotacija yra lygi @Configuration, @EnableAutoConfiguration ir @ComponentsScan (bean registruoti)
-//Ši anotacija nurodoma klasėje, turinčioje main method
+/*SpringBootApplication anotacija yra lygi @Configuration, @EnableAutoConfiguration ir @ComponentsScan (bean registruoti)
+Ši anotacija nurodoma klasėje, turinčioje main method */
 @SpringBootApplication
 public class CalculatorApplication {
-
 
 	public static void main(String[] args) {
 
