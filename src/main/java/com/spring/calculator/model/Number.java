@@ -1,12 +1,10 @@
 package com.spring.calculator.model;
 import jakarta.validation.constraints.Min;
-
 import javax.persistence.*;
 
-
-@Entity // Entity tai PJO klasė sijungta su DB esančia lentele naudojant ORM technika
-//Anotacija nurodo, jog susiesime POJO klasę su DB esančia lentelę, kurios pavadinimas "numbers"
-@Table(name="numbers") // klasė visada vienaskaita, table daugyskaita
+@Entity /* Entity tai POJO klasė sijungta su DB esančia lentele naudojant ORM technika
+    Anotacija nurodo, jog susiesime POJO klasę su DB esančia lentelę, kurios pavadinimas "numbers" */
+@Table(name="numbers") // klasė visada vienaskaita, table daugiskaita
 
 public class Number {
     @Id

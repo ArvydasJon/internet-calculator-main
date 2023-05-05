@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-// Service- servisų sloksnis "verlo" logikai
-// po serviso sluoksniu kreipiamės į DB
+/* Service- servisų sloksnis "verlo" logikai
+     po serviso sluoksniu kreipiamės į DB */
 @Service
 public class NumberServiceImpl implements NumberService {
 
-    // @Autowired naud automat priklausomybių injekcijai (IOC -iversion of control)
-    // kad panaudoti @Autowired anotaciją reikia pirmaiausia turėti apsirašius @Been @Configuration klasė
+    /* @Autowired naud automat priklausomybių injekcijai (IOC -iversion of control)
+        kad panaudoti @Autowired anotaciją reikia pirmaiausia turėti apsirašius @Been @Configuration klasė */
     @Autowired
 
 /* @Qualifier anotacija kartu su @ autowired patikslina su kuriuo konkrečiai Been susieti priklausomybę.

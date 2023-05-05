@@ -24,6 +24,7 @@ dažniausiai gražinami formatai, JSON, .xml  t.y. negražinami vaizdo (html, js
 
 //kadangi mus reikia gražinti (view) pagal spring MVC, naudosime anotacija @Controller
 @Controller
+
 /*Žymi konfigūracijos komponentą, viduje leidžia kurti BEAN per metodus su @Bean anotacija
 Ši klasės lygio anotacija nurodo Spring   framwork atspėti konfigūraciją
 Remiantis priklausomybėmis (JAR bibliotekomis), kurias programuotojas įtraukė į projektą (pom.xml)
@@ -79,7 +80,7 @@ public class CalculatorController {
                     result =(double) sk1 * sk2;
                     break;
                 case "/":
-                    if (sk1 != 0) {
+                    if (sk2 != 0) {
                         result = (double) sk1/ sk2;
 
                     } else {
@@ -104,16 +105,15 @@ public class CalculatorController {
                 // Kreipėmes į Service kuris savo ruoštu kreipiasi į DAO ir išsaugoja įrašą DB
                 numberService.insert(new Number(sk1,sk2,action,result));
 
-                return "calculate";
+                return "calculate2";
             }
         }
-
 
         //grąžinamas vaizdas (forma .jsp)
         //svarbu nurodyti per application.properties prefix ir suffix nes pagal tai ieškos vaizdo projekte
         //return "calculate";
-        // ApplicationContext yra interface skirtassuteikti informaciją apie aplikacijos konfigūraciją.
-        //Šiuo atveju naudojama konfigūracija paimam iš xml failo
+        // ApplicationContext yra interface skirtas suteikti informaciją apie aplikacijos konfigūraciją.
+        // Šiuo atveju naudojama konfigūracija paimam iš xml failo
         //  ApplicationContext applicationContext = new ClassPathXmlApplicationContext("beans.xml");
 
 //        return "Internet calculator <br><br>" +
@@ -136,35 +136,37 @@ public class CalculatorController {
     }
     @RequestMapping(method=RequestMethod.GET, value="/numbers")
     public String getAllNumbers(Model model){
-
         model.addAttribute("numbers",numberService.getAll());
-        return "numbers";
+        return "numbers2";
+
     }
 
     // id ateina iš frontendo, vartotojui pasirinkus konkretų įrašą
     @RequestMapping(method=RequestMethod.GET, value="/show{id}")
     public String getById(@RequestParam("id") int id,Model model){
         model.addAttribute("number",numberService.getById(id));
-        return "number";
+        return "number2";
     }
 
     @RequestMapping(method=RequestMethod.GET, value="/delete{id}")
     public String deleteById(@RequestParam("id") int id,Model model) {
         numberService.delete(id);
         model.addAttribute("numbers", numberService.getAll());
-        return "numbers";
+        return "numbers2";
     }
         /*
         Atnaujinant įrašą pirmiasia reikia jį parodyti
          */
         @RequestMapping(method=RequestMethod.GET, value="/update{id}")
         public String updateById(@RequestParam("id") int id,Model model){
+            /*Kai užkrauname įrašo redagavimo forma, privalome jos laukelius užpildyti įrašo informacija
+             */
             model.addAttribute("number",numberService.getById(id));
             return "update";
         }
 
         //Kadangi forma naudoja POST, čia taip pat naudojame POST
-        @RequestMapping(method=RequestMethod.POST, value="/updateNumber{id}")
+        @RequestMapping(method=RequestMethod.POST, value="/updateNumber")
         public String updateNumber(@ModelAttribute("number")Number number){
             numberService.update(number);
             // redirect nukreipia vartotoją į įrašo atvaizdavimo puslapį(getById)
@@ -172,52 +174,4 @@ public class CalculatorController {
         }
 
     }
-
-
-
-
-/*
-    @RequestMapping("/dalinti")
-    public String dalint() {
-        double dalyba = 8 / 3;
-
-        return "Dalyba 8/3 = " + dalyba;
-    }
-
-
-    @GetMapping("/list")
-    public List<Student> all() {
-        List<Student> students = new ArrayList<>();
-
-        Student st1 = new Student(10, "Virgis", "Saule", 15);
-        Student st2 = new Student(11, "Tadas", "Morkauskas", 20);
-
-        students.add(new Student(12, "Karolis", "Kirvis", 20));
-
-        students.add(st1);
-        students.add(st2);
-
-        return students;
-    }
-
-    @GetMapping("/list/{name}/{lastName}")
-    public Student path(@PathVariable String name,
-                        @PathVariable String lastName) {
-        Student student = new Student();
-        //int id = student.getId();
-        // int age = student.getAge();
-
-        return new Student(name, lastName);
-
-    }
-
-    @GetMapping("/list/query")
-    public Student studentQuery(@RequestParam(name = "name") String name,
-                                @RequestParam(name = "lastName") String lastName) {
-
-        return new Student(name, lastName);
-    }
-
-
-} */
 

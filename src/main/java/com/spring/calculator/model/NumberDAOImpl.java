@@ -21,20 +21,21 @@ public class NumberDAOImpl  implements NumberDAO{
 
     @Override
     public Number findEntityById(int id) {
-        EntityManager entityManager= JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
+
         EntityTransaction entityTransaction = entityManager.getTransaction();
         entityTransaction.begin();
 
-        List<Number> numbers= entityManager
-                .createNamedQuery("SELECT n from Number n WHERE n.id = :id")
-                //ORM modelyje ieškome ne duomenų bazės lentelėje, bet Entetije
+        List<Number> numbers = entityManager
+                //ORM modelyje ieškome ne DB lentelėjė, bet Entity
+                .createQuery("SELECT n FROM Number n WHERE n.id = :id")//n
                 .setParameter("id", id)
-                .getResultList(); // negrąžiname ResultSet, o gražinamas List
+                .getResultList();//negrąžinamas ResultSet, o grąžinamas List
 
         entityManager.getTransaction().commit();
         entityManager.close();
 
-        return  numbers.get(0);
+        return numbers.get(0);
     }
 
     @Override

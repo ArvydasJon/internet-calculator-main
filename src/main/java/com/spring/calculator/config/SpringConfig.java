@@ -22,10 +22,11 @@ public class SpringConfig {
      */
     @Bean
     /*
-    @Qualifier anotacija kartu su @ autowired patikslina su kuriuo konkrečiai Been susieti priklausomybę.
+    @Qualifier anotacija kartu su @Autowired patikslina su kuriuo konkrečiai Been susieti priklausomybę.
     Jeigu @Configuration klasėje yra daugiau nei 1 Been, @Quolifier anotacija yra privaloma, kitų atvėju metama klaida:
      'Consider marking one of the beans as @Primary, updating the consumer to accept multiple beans,
-     or using @Qualifier to identify the bean that should be consumed'
+     or using @Qualifier to identify the bean
+      that should be consumed'
      */
     @Qualifier("NumberDAO")
     public NumberDAO getNumberDAO() {
